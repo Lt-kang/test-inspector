@@ -16,8 +16,6 @@ import { HistoryProvider } from './context/HistoryContext';
 
 import { PopupContext } from './context/PopupContext';
 
-import "https://esm.run/mathlive";
-
 
 function App() {
   const { isPopupOpen, 
