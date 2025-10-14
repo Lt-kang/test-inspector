@@ -9,10 +9,6 @@ import { UnitProblemDataProvider } from './RightPanel/UnitProblemDataContext';
 
 
 
-const activate_save = {backgroundColor: "#0085cf", color: "white", marginLeft: "5px"}
-
-
-
 function BoarderLine() {
   return (
     <div className="border-t my-6"></div>

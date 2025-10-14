@@ -8,9 +8,9 @@ import { UnitProblemDataContext } from './UnitProblemDataContext';
 
 import { CustomButton } from './Button';
 import ProblemMetaData from './ProblemMetaData';
+import KorMarkdownViewer from './MarkdownWithKor';
 
-
-import MarkdownMathEditor from './MarkdownMathEditor';
+import MarkdownEditor from './MarkdownEditor';
 import MarkdownWithMathRenderer from './MarkdownWithMath';
 
 
@@ -153,29 +153,33 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
 
 
     if (!ProblemEditorShow) {
-        if (typeof unitProblemData.problem[target_key] == 'object') {
-            const contents = JSON.stringify(unitProblemData.problem[target_key], null, 4).replace("{", "").replace("}", "");
+      const contents = (typeof unitProblemData.problem[target_key] == 'object') ?
+                        JSON.stringify(unitProblemData.problem[target_key], null, 4).replace("{", "").replace("}", "") :
+                        unitProblemData.problem[target_key];
 
-            return (
-                <div class="prose max-w-none">
-                    <MarkdownWithMathRenderer content={contents} />
-                </div>
-            );
+        if (unitProblemData.subject.includes("수학")) {
+          return (
+            <div className="prose max-w-none">
+              <MarkdownWithMathRenderer content={contents} />
+            </div>
+          )
         }
         else {
-            return (
-                <div class="prose max-w-none">
-                    <MarkdownWithMathRenderer content={unitProblemData.problem[target_key]} />
-                </div>
-            );
+          return(
+            <div className="prose max-w-none">
+              <KorMarkdownViewer content={contents} />
+            </div>
+          )
         }
-    }
-    else {
+      }
+      else {
+        // Editor button을 눌렀을 때
         return (
-            <div class="prose max-w-none">
-                <MarkdownMathEditor 
+            <div className="prose max-w-none">
+                <MarkdownEditor 
                     content={unitProblemData.problem[target_key]} 
-                    onChange={EditorChangeAction} />
+                    onChange={EditorChangeAction} 
+                    math_type={unitProblemData.subject.includes("수학")} />
             </div>
         );
     }
@@ -227,35 +231,6 @@ return (
 function DivAnswerEdit({target_key, AnswerEditorShow}) {
     const { unitProblemData, setUnitProblemData } = useContext(UnitProblemDataContext);
 
-
-    if (!AnswerEditorShow) {
-        if (typeof unitProblemData.answer[target_key] == 'object') {
-            const contents = "\n" + JSON.stringify(unitProblemData.answer[target_key], null, 4).replace("{", "").replace("}", "");
-            // contents에 개행을 삽입하여 가독성 향상
-
-            let formattedContents = contents;
-            if (contents.includes('0"')) {
-                formattedContents = contents.replace('0":', '0":\n');
-            }
-            else {
-                formattedContents = contents.replace('common":', 'common":\n');
-            }
-
-            return (
-                <div class="prose max-w-none">
-                    <MarkdownWithMathRenderer content={formattedContents} />
-                </div>
-            );
-        }
-        else {
-            return (
-                <div class="prose max-w-none">
-                    <MarkdownWithMathRenderer content={unitProblemData.answer[target_key]} />
-                </div>
-            );
-        }
-    }
-
     const EditorChangeAction = (v) => {
       setUnitProblemData(prev => ({
         ...prev,
@@ -267,14 +242,46 @@ function DivAnswerEdit({target_key, AnswerEditorShow}) {
     }
 
 
-    return (
-        <div class="prose max-w-none">
-            <p>
-              <MarkdownMathEditor content={unitProblemData.answer[target_key]} 
-                                  onChange={EditorChangeAction}
-                  />
-            </p>
-        </div>
-    );
-}
+    if (!AnswerEditorShow) {
+        let contents = ""
 
+        if (typeof unitProblemData.answer[target_key] == 'object') {
+          contents = JSON.stringify(unitProblemData.answer[target_key], null, 4).replace("{", "").replace("}", "")
+          contents = (contents.includes('0"')) ? 
+                      contents.replace('0":', '0":\n') :
+                      contents.replace('common":', 'common":\n');
+        }
+        else {
+          contents = unitProblemData.answer[target_key];
+        }
+
+
+        if (unitProblemData.subject.includes("수학")) {
+          return (
+            <div className="prose max-w-none">
+              <MarkdownWithMathRenderer content={contents} />
+            </div>
+          )
+        }
+        else {
+          return (
+            <div className="prose max-w-none">
+              <KorMarkdownViewer content={contents} />
+            </div>
+          )
+        }
+        
+    }
+    else {
+      // Editor button을 눌렀을 때
+        return (
+            <div class="prose max-w-none">
+                <p>
+                  <MarkdownEditor content={unitProblemData.answer[target_key]} 
+                                  onChange={EditorChangeAction}
+                                  math_type={unitProblemData.subject.includes("수학")} />
+                </p>
+            </div>
+        );
+    }
+  }

@@ -4895,3 +4895,15 @@ body {
 body {
     counter-reset: katexEqnNo mmlEqnNo
 }
+
+
+.markdown :where(h1){font-size:1.875rem;font-weight:700;margin:1.5rem 0 .75rem;}
+.markdown :where(h2){font-size:1.5rem;font-weight:600;margin:1.25rem 0 .6rem;}
+.markdown :where(h3){font-size:1.25rem;font-weight:600;margin:1rem 0 .5rem;}
+.markdown :where(p){margin:1rem 0;}
+.markdown :where(strong){font-weight:700;}
+.markdown :where(ul){list-style:disc; padding-left:1.5rem; margin:1rem 0;}
+.markdown :where(ol){list-style:decimal; padding-left:1.5rem; margin:1rem 0;}
+.markdown :where(blockquote){border-left:4px solid #e5e7eb; padding-left:1rem; margin:1rem 0; font-style:italic;}
+.markdown :where(code){background:#f5f5f5; padding:.125rem .375rem; border-radius:.25rem;}
+.markdown :where(pre > code){display:block; padding:1rem;}
