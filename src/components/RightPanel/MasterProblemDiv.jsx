@@ -13,6 +13,7 @@ import KorMarkdownViewer from './MarkdownWithKor';
 import MarkdownEditor from './MarkdownEditor';
 import MarkdownWithMathRenderer from './MarkdownWithMath';
 
+import { ParsingChoice } from '../etc/parsingObject';
 
 
 export default function MasterDiv({_type = "Q"}) {
@@ -117,7 +118,8 @@ function ProblemTitle({ title, target_key }) {
   return (
   <div>
       <h3 class="text-lg font-semibold mb-3">{title} 
-        {title != "choices" && (
+        {
+        title != "choices" && (
                 <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
                               onClickFunction={() => {
                                 if (!loadStatus) {
@@ -126,6 +128,15 @@ function ProblemTitle({ title, target_key }) {
                                 setProblemEditorShow(!ProblemEditorShow)}}
                 />
         )}
+
+                  {/* <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
+                        onClickFunction={() => {
+                          if (!loadStatus) {
+                            return ;
+                          }
+                          setProblemEditorShow(!ProblemEditorShow)}}
+          /> */}
+
       </h3>
 
       <div style={{marginTop: "7px"}}></div>
@@ -151,26 +162,17 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
       }));
     }
 
+    const contents = (typeof unitProblemData.problem[target_key] == 'object') ?
+                      // JSON.stringify(unitProblemData.problem[target_key], null, 4).replace("{", "").replace("}", "") :
+                      ParsingChoice(unitProblemData.problem[target_key]) :
+                      unitProblemData.problem[target_key];
 
     if (!ProblemEditorShow) {
-      const contents = (typeof unitProblemData.problem[target_key] == 'object') ?
-                        JSON.stringify(unitProblemData.problem[target_key], null, 4).replace("{", "").replace("}", "") :
-                        unitProblemData.problem[target_key];
-
-        if (unitProblemData.subject.includes("수학")) {
-          return (
-            <div className="prose max-w-none">
-              <MarkdownWithMathRenderer content={contents} />
-            </div>
-          )
-        }
-        else {
-          return(
-            <div className="prose max-w-none">
-              <KorMarkdownViewer content={contents} />
-            </div>
-          )
-        }
+        return(
+          <div className="prose max-w-none">
+            <KorMarkdownViewer content={contents} />
+          </div>
+        )
       }
       else {
         // Editor button을 눌렀을 때
@@ -179,7 +181,7 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
                 <MarkdownEditor 
                     content={unitProblemData.problem[target_key]} 
                     onChange={EditorChangeAction} 
-                    math_type={unitProblemData.subject.includes("수학")} />
+                    />
             </div>
         );
     }
@@ -246,30 +248,23 @@ function DivAnswerEdit({target_key, AnswerEditorShow}) {
         let contents = ""
 
         if (typeof unitProblemData.answer[target_key] == 'object') {
-          contents = JSON.stringify(unitProblemData.answer[target_key], null, 4).replace("{", "").replace("}", "")
-          contents = (contents.includes('0"')) ? 
-                      contents.replace('0":', '0":\n') :
-                      contents.replace('common":', 'common":\n');
+          contents = ParsingChoice(unitProblemData.answer[target_key])
+
+          // contents = JSON.stringify(unitProblemData.answer[target_key], null, 4).replace("{", "").replace("}", "")
+          // contents = (contents.includes('0"')) ? 
+          //             contents.replace('0":', '0":\n') :
+          //             contents.replace('common":', 'common":\n');
         }
         else {
           contents = unitProblemData.answer[target_key];
         }
 
 
-        if (unitProblemData.subject.includes("수학")) {
-          return (
-            <div className="prose max-w-none">
-              <MarkdownWithMathRenderer content={contents} />
-            </div>
-          )
-        }
-        else {
-          return (
-            <div className="prose max-w-none">
-              <KorMarkdownViewer content={contents} />
-            </div>
-          )
-        }
+        return (
+          <div className="prose max-w-none">
+            <KorMarkdownViewer content={contents} />
+          </div>
+        )
         
     }
     else {
@@ -278,10 +273,11 @@ function DivAnswerEdit({target_key, AnswerEditorShow}) {
             <div class="prose max-w-none">
                 <p>
                   <MarkdownEditor content={unitProblemData.answer[target_key]} 
-                                  onChange={EditorChangeAction}
-                                  math_type={unitProblemData.subject.includes("수학")} />
+                                  onChange={EditorChangeAction} />
                 </p>
             </div>
         );
     }
   }
+
+
