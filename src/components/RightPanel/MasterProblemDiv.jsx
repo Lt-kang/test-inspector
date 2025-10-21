@@ -11,7 +11,7 @@ import ProblemMetaData from './ProblemMetaData';
 import KorMarkdownViewer from './MarkdownWithKor';
 
 import MarkdownEditor from './MarkdownEditor';
-import MarkdownWithMathRenderer from './MarkdownWithMath';
+import ChoiceEditor from './ChoiceEditor';
 
 import { ParsingChoice } from '../etc/parsingObject';
 
@@ -118,7 +118,7 @@ function ProblemTitle({ title, target_key }) {
   return (
   <div>
       <h3 class="text-lg font-semibold mb-3">{title} 
-        {
+        {/* {
         title != "choices" && (
                 <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
                               onClickFunction={() => {
@@ -127,15 +127,15 @@ function ProblemTitle({ title, target_key }) {
                                 }
                                 setProblemEditorShow(!ProblemEditorShow)}}
                 />
-        )}
+        )} */}
 
-                  {/* <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
+                  <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
                         onClickFunction={() => {
                           if (!loadStatus) {
                             return ;
                           }
                           setProblemEditorShow(!ProblemEditorShow)}}
-          /> */}
+          />
 
       </h3>
 
@@ -176,14 +176,23 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
       }
       else {
         // Editor button을 눌렀을 때
-        return (
-            <div className="prose max-w-none">
-                <MarkdownEditor 
-                    content={unitProblemData.problem[target_key]} 
-                    onChange={EditorChangeAction} 
-                    />
-            </div>
-        );
+        if (target_key == "choices") {
+            return (
+                  <ChoiceEditor 
+                      content={unitProblemData.problem[target_key]} 
+                      onChange={EditorChangeAction} 
+                      />
+          )
+        } else {
+            return (
+                  <MarkdownEditor 
+                      content={unitProblemData.problem[target_key]} 
+                      onChange={EditorChangeAction} 
+                      />
+          );
+        }
+
+        
     }
 }
 
@@ -208,7 +217,7 @@ useEffect(() => {
 return (
         <div>
           <h3 class="text-lg font-semibold mb-3">{title} 
-            {title != "explanation_wrongchoice" && (
+            {/* {title != "explanation_wrongchoice" && (
               <CustomButton Text={AnswerEditorShow ? "View" : "Editor"} 
                             onClickFunction={() => {
                               if (!loadStatus) {
@@ -216,14 +225,22 @@ return (
                               }
                               setAnswerEditorShow(!AnswerEditorShow)}}
               />
-            )}
+            )} */}
+
+              <CustomButton Text={AnswerEditorShow ? "View" : "Editor"} 
+                            onClickFunction={() => {
+                              if (!loadStatus) {
+                                return ;
+                              }
+                              setAnswerEditorShow(!AnswerEditorShow)}}
+              />
           </h3>
 
-        <div style={{marginTop: "7px"}}></div>
-        <br></br>
+          <div style={{marginTop: "7px"}}></div>
+          <br></br>
 
-          <DivAnswerEdit target_key={target_key} 
-                         AnswerEditorShow={AnswerEditorShow} />
+            <DivAnswerEdit target_key={target_key} 
+                          AnswerEditorShow={AnswerEditorShow} />
         </div>
         )
   }
@@ -249,11 +266,6 @@ function DivAnswerEdit({target_key, AnswerEditorShow}) {
 
         if (typeof unitProblemData.answer[target_key] == 'object') {
           contents = ParsingChoice(unitProblemData.answer[target_key])
-
-          // contents = JSON.stringify(unitProblemData.answer[target_key], null, 4).replace("{", "").replace("}", "")
-          // contents = (contents.includes('0"')) ? 
-          //             contents.replace('0":', '0":\n') :
-          //             contents.replace('common":', 'common":\n');
         }
         else {
           contents = unitProblemData.answer[target_key];
@@ -261,23 +273,24 @@ function DivAnswerEdit({target_key, AnswerEditorShow}) {
 
 
         return (
-          <div className="prose max-w-none">
-            <KorMarkdownViewer content={contents} />
-          </div>
-        )
+        <KorMarkdownViewer content={contents} />
+      )
         
     }
     else {
       // Editor button을 눌렀을 때
+      if (target_key == "explanation_wrongchoice") {
         return (
-            <div class="prose max-w-none">
-                <p>
-                  <MarkdownEditor content={unitProblemData.answer[target_key]} 
-                                  onChange={EditorChangeAction} />
-                </p>
-            </div>
-        );
+              <ChoiceEditor 
+                  content={unitProblemData.answer[target_key]} 
+                  onChange={EditorChangeAction} 
+                  />
+        )
+      } else {
+          return (
+                    <MarkdownEditor content={unitProblemData.answer[target_key]} 
+                                    onChange={EditorChangeAction} />
+          )
+      }
     }
   }
-
-

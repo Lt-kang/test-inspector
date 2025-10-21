@@ -44,27 +44,30 @@ function RightPanelTopbar() {
 
 
     for (const key in unitProblemData.problem) {
-      if (unitProblemData.problem[key] !== masterProblemData[unitProblemIndex].problem[key] && unitProblemData.problem[key] != "[object Object]") {
+      // if (unitProblemData.problem[key] !== masterProblemData[unitProblemIndex].problem[key] && unitProblemData.problem[key] != "[object Object]") {
+      if (unitProblemData.problem[key] !== masterProblemData[unitProblemIndex].problem[key]){
         setHistory(prev => [...prev, {
           index: prev.length + 1,
           subject: unitProblemData.subject,
           problem_num: unitProblemData.problem_num,
           key: key,
-          value_before: masterProblemData[unitProblemIndex].problem[key],
-          value_after: unitProblemData.problem[key],
+          // value_before: masterProblemData[unitProblemIndex].problem[key],
+          value_before: (typeof masterProblemData[unitProblemIndex].problem[key] == 'object') ? JSON.stringify(masterProblemData[unitProblemIndex].problem[key], null, 4) : masterProblemData[unitProblemIndex].problem[key],
+          value_after: (typeof unitProblemData.problem[key] == 'object') ? JSON.stringify(unitProblemData.problem[key], null, 4) : unitProblemData.problem[key],
         }]);
       }
     }
 
     for (const key in unitProblemData.answer) {
-      if (unitProblemData.answer[key] !== masterProblemData[unitProblemIndex].answer[key] && unitProblemData.answer[key] != "[object Object]") {
+      //if (unitProblemData.answer[key] !== masterProblemData[unitProblemIndex].answer[key] && unitProblemData.answer[key] != "[object Object]") {
+      if (unitProblemData.answer[key] !== masterProblemData[unitProblemIndex].answer[key]){
         setHistory(prev => [...prev, {
           index: prev.length + 1,
           subject: unitProblemData.subject,
           problem_num: unitProblemData.problem_num,
           key: key,
-          value_before: masterProblemData[unitProblemIndex].answer[key],
-          value_after: unitProblemData.answer[key],
+          value_before: (typeof masterProblemData[unitProblemIndex].answer[key] == 'object') ? JSON.stringify(masterProblemData[unitProblemIndex].answer[key], null, 4) : masterProblemData[unitProblemIndex].answer[key],
+          value_after: (typeof unitProblemData.answer[key] == 'object') ? JSON.stringify(unitProblemData.answer[key], null, 4) : unitProblemData.answer[key],
         }]);
       }
     }
