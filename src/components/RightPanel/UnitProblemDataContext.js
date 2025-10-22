@@ -28,7 +28,7 @@ export const UnitProblemDataProvider = ({ children }) => {
     }
   });
 
-  const [lineBreakSwitch, setLineBreakSwitch] = useState(false);
+  const [lineBreakSwitch, setLineBreakSwitch] = useState(true);
 
     return (
       <UnitProblemDataContext.Provider value={{ 
