@@ -108,9 +108,6 @@ function ProblemTitle({ title, target_key }) {
   const { targetSubject, targetProblemNum } = useContext(TargetKeyContext);
 
   useEffect(() => {
-    /**
-     * LeftPanel에서 과목 및 항목을 변경할 경우 이미 실행되어있는 Editor를 종료합니다.
-     */
     setProblemEditorShow(false);
   }, [targetSubject, targetProblemNum]);
 
@@ -118,25 +115,12 @@ function ProblemTitle({ title, target_key }) {
   return (
   <div>
       <h3 class="text-lg font-semibold mb-3">{title} 
-        {/* {
-        title != "choices" && (
-                <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
-                              onClickFunction={() => {
-                                if (!loadStatus) {
-                                  return ;
-                                }
-                                setProblemEditorShow(!ProblemEditorShow)}}
-                />
-        )} */}
-
-                  <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
-                        onClickFunction={() => {
-                          if (!loadStatus) {
-                            return ;
-                          }
-                          setProblemEditorShow(!ProblemEditorShow)}}
-          />
-
+        <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
+              onClickFunction={() => {
+                if (!loadStatus) {
+                  return ;
+                }
+                setProblemEditorShow(!ProblemEditorShow)}}/>
       </h3>
 
       <div style={{marginTop: "7px"}}></div>
@@ -163,15 +147,12 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
     }
 
     const contents = (typeof unitProblemData.problem[target_key] == 'object') ?
-                      // JSON.stringify(unitProblemData.problem[target_key], null, 4).replace("{", "").replace("}", "") :
                       ParsingChoice(unitProblemData.problem[target_key]) :
                       unitProblemData.problem[target_key];
 
     if (!ProblemEditorShow) {
         return(
-          <div className="prose max-w-none">
             <KorMarkdownViewer content={contents} />
-          </div>
         )
       }
       else {
@@ -207,9 +188,6 @@ const { loadStatus } = useContext(EtcContext);
 const { targetSubject, targetProblemNum } = useContext(TargetKeyContext);
 
 useEffect(() => {
-  /**
-   * LeftPanel에서 과목 및 항목을 변경할 경우 이미 실행되어있는 Editor를 종료합니다.
-   */
   setAnswerEditorShow(false);
 }, [targetSubject, targetProblemNum]);
 
@@ -217,23 +195,12 @@ useEffect(() => {
 return (
         <div>
           <h3 class="text-lg font-semibold mb-3">{title} 
-            {/* {title != "explanation_wrongchoice" && (
               <CustomButton Text={AnswerEditorShow ? "View" : "Editor"} 
                             onClickFunction={() => {
                               if (!loadStatus) {
                                 return ;
                               }
-                              setAnswerEditorShow(!AnswerEditorShow)}}
-              />
-            )} */}
-
-              <CustomButton Text={AnswerEditorShow ? "View" : "Editor"} 
-                            onClickFunction={() => {
-                              if (!loadStatus) {
-                                return ;
-                              }
-                              setAnswerEditorShow(!AnswerEditorShow)}}
-              />
+                              setAnswerEditorShow(!AnswerEditorShow)}} />
           </h3>
 
           <div style={{marginTop: "7px"}}></div>

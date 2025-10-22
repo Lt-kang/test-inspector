@@ -2,6 +2,7 @@ export default function ChoiceEditor({ content, onChange }) {
     return (
         <div className="prose max-w-none">
             {content && Object.entries(content).map(([key, value]) => (
+                key.trim() === "" ? null : (
                 <div key={key} style={{ marginBottom: "1rem" }}>
                     <label className="font-semibold mr-2">{key}</label>
                     <TextEditor
@@ -15,6 +16,7 @@ export default function ChoiceEditor({ content, onChange }) {
                         placeholder={`Enter value for ${key}`}
                     />
                 </div>
+                )
             ))}
         </div>
     )
@@ -22,7 +24,7 @@ export default function ChoiceEditor({ content, onChange }) {
 
 
 
-function TextEditor({ text, onChange, placeholder, rows }) {
+function TextEditor({ text, onChange }) {
     return (
         <textarea
         value={text}

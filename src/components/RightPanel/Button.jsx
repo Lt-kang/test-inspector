@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UnitProblemDataContext } from './UnitProblemDataContext';
 
 function ProblemInfoButton({onClickFunction}) {
     return (
@@ -57,6 +58,26 @@ function CustomButton({onClickFunction, Text, style={}, noMargin=false}) {
       </button>
     )
 }
+
+
+function LineBreakButton() {
+  const { lineBreakSwitch, setLineBreakSwitch } = useContext(UnitProblemDataContext);
+
+  const handleClick = () => {
+    setLineBreakSwitch(!lineBreakSwitch);
+  }
+
+  return (
+        <button 
+        className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
+        onClick={handleClick}
+    >
+        {lineBreakSwitch ? "\\n -> ▽" : "▽ -> \\n"}
+    </button>
+  )
+}
+
+
 
 function SaveButton({onClickFunction, loadCheck, Text="Save", style={}, noMargin=false}) {
   const [saveState, setSaveState] = useState('idle'); // 'idle', 'saving', 'saved'
@@ -176,4 +197,4 @@ function KeyButton({keyInfo, setKeyInfo}) {
   )
 }
 
-export { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, CustomButton, SpecialCustomButton, AnswerHideButton, KeyButton, SaveButton };
+export { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, CustomButton, SpecialCustomButton, AnswerHideButton, KeyButton, SaveButton , LineBreakButton};

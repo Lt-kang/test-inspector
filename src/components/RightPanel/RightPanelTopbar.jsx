@@ -1,4 +1,4 @@
-import { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, SaveButton } from './Button';
+import { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, SaveButton, LineBreakButton } from './Button';
 
 import { useState, useContext, useEffect } from 'react';
 import { ProblemDataContext } from '../../context/ProblemDataContext';
@@ -103,6 +103,8 @@ function RightPanelTopbar() {
               </div>
             </div>
           <div className="flex gap-2">
+
+          <LineBreakButton />
 
           <SaveButton onClickFunction={SaveAction}
                       loadCheck={loadStatus} />
