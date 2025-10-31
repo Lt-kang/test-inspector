@@ -147,8 +147,8 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
     }
 
     const contents = (typeof unitProblemData.problem[target_key] == 'object') ?
-                      ParsingChoice(unitProblemData.problem[target_key]) :
-                      unitProblemData.problem[target_key];
+                              ParsingChoice(unitProblemData.problem[target_key]) :
+                              unitProblemData.problem[target_key];
 
     if (!ProblemEditorShow) {
         return(

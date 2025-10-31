@@ -49,7 +49,13 @@ function UnitProblemList({ subject, problemNum }) {
             return;
         }
         setTargetSubject(subject);
-        setTargetProblemNum(parseInt(problemNum));
+        setTargetProblemNum(problemNum);
+
+        // if (problemNum.includes('-')) {
+        //     setTargetProblemNum(parseInt(problemNum.split('-')[1]));
+        // } else {
+        //     setTargetProblemNum(parseInt(problemNum));
+        // }
     }
 
     return (

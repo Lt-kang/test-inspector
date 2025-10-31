@@ -67,7 +67,14 @@ export default function TopNav() {
       setJsonFileName(file.name);
 
       setTargetSubject(jsonData.data[0].subject);
-      setTargetProblemNum(1);
+
+      setTargetProblemNum(jsonData.data[0].problem_num);
+
+      // if (jsonData.data[0].problem_num.includes('-')) {
+      //   setTargetProblemNum(parseInt(jsonData.data[0].problem_num.split('-')[1]));
+      // } else {
+      //   setTargetProblemNum(1);
+      // }
 
       setLoadStatus(true);
       

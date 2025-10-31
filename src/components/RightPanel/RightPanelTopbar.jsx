@@ -126,7 +126,13 @@ function RightPanelTopbar() {
             disabled={targetProblemNum == 1 && !(isUnitJsonPopupOpen || isJsonPopupOpen || isPopupOpen)}
             onClick={() => {
               if (!loadStatus) {return ;}
-              setTargetProblemNum(parseInt(targetProblemNum) - 1)}}>
+              // if (targetProblemNum.includes('-')) {
+              //   setTargetProblemNum(parseInt(targetProblemNum.split('-')[1]));
+              // } else {
+              //   setTargetProblemNum(parseInt(targetProblemNum));
+              // }
+              setTargetProblemNum(targetProblemNum);
+            }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left h-4 w-4">
                 <path d="m15 18-6-6 6-6"></path>
               </svg>
@@ -136,7 +142,13 @@ function RightPanelTopbar() {
             disabled={targetProblemNum == targetSubjectCount}
             onClick={() => {
               if (!loadStatus) {return ;}
-              setTargetProblemNum(parseInt(targetProblemNum) + 1)}}>
+              // if (targetProblemNum.includes('-')) {
+              //   setTargetProblemNum(parseInt(targetProblemNum.split('-')[1]));
+              // } else {
+              //   setTargetProblemNum(parseInt(targetProblemNum));
+              // }
+              setTargetProblemNum(targetProblemNum);
+            }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right h-4 w-4">
                 <path d="m9 18 6-6-6-6"></path>
               </svg>
