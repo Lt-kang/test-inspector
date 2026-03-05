@@ -42,7 +42,7 @@ function UnitProblemList({ subject, problemNum }) {
 
     const { targetSubject, targetProblemNum, setTargetSubject, setTargetProblemNum } = useContext(TargetKeyContext);
     const { loadStatus } = useContext(EtcContext);
-    const isSelected = targetSubject === subject && targetProblemNum == problemNum;
+    const isSelected = targetSubject === subject && parseInt(targetProblemNum) === parseInt(problemNum);
 
     const handleProblemClick = () => {
         if (!loadStatus) {

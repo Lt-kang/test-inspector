@@ -49,9 +49,9 @@ export default function MasterDiv() {
       if (!loadStatus) { return; }
 
       if (targetSubject !== '') {
-          setUnitProblemData(masterProblemData.find(item => item.section === targetSubject && item.problem_number == targetProblemNum));
-          setTargetIndex(masterProblemData.findIndex(item => item.section === targetSubject && item.problem_number == targetProblemNum));
-          setUnitProblemIndex(masterProblemData.findIndex(item => item.section === targetSubject && item.problem_number == targetProblemNum));
+          setUnitProblemData(masterProblemData.find(item => item.section === targetSubject && parseInt(item.problem_number) === parseInt(targetProblemNum)));
+          setTargetIndex(masterProblemData.findIndex(item => item.section === targetSubject && parseInt(item.problem_number) === parseInt(targetProblemNum)));
+          setUnitProblemIndex(masterProblemData.findIndex(item => item.section === targetSubject && parseInt(item.problem_number) === parseInt(targetProblemNum)));
       }
     }, [targetSubject, targetProblemNum, masterProblemData]);
 
@@ -283,7 +283,7 @@ function DivAnswerEdit({target_key, AnswerEditorShow}) {
     }
     else {
       // Editor button을 눌렀을 때
-      if (target_key == "explanation_wrongchoice") {
+      if (target_key === "explanation_wrongchoice") {
         return (
               <ChoiceEditor 
                   content={unitProblemData.answer[target_key]} 

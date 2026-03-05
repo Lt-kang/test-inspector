@@ -19,7 +19,7 @@ export default function TopNav() {
   const { metaData, setMetaData, 
           masterProblemData, setMasterProblemData,
           fileName, setFileName, 
-          totalProblemNum, setTotalProblemNum,
+          setTotalProblemNum,
           jsonFileName, setJsonFileName } = useContext(ProblemDataContext);
 
   const { loadStatus, setLoadStatus } = useContext(EtcContext);

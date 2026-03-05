@@ -1,9 +1,8 @@
 // MarkdownMathEditor.jsx
-import { useEffect, useState } from "react";
-import MarkdownWithMath from "./MarkdownWithMath";
+import { useState } from "react";
 import KorMarkdownViewer from "./MarkdownWithKor";
 
-import { ParsingChoice } from '../etc/parsingObject';
+// import { ParsingChoice } from '../etc/parsingObject';
 
 export default function MarkdownEditor({
   content,          // 외부에서 주입되는 텍스트 (controlled)

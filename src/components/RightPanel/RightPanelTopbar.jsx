@@ -93,7 +93,7 @@ function RightPanelTopbar() {
 
 
             <button className={someButtonClass} 
-            disabled={targetProblemNum == 1 && !(isUnitJsonPopupOpen || isJsonPopupOpen || isPopupOpen)}
+            disabled={parseInt(targetProblemNum) === 1 && !(isUnitJsonPopupOpen || isJsonPopupOpen || isPopupOpen)}
             onClick={() => {
               if (!loadStatus) {return ;}
               // if (targetProblemNum.includes('-')) {
@@ -109,7 +109,7 @@ function RightPanelTopbar() {
             </button>
 
             <button className={someButtonClass}
-            disabled={targetProblemNum == targetSubjectCount}
+            disabled={parseInt(targetProblemNum) === targetSubjectCount}
             onClick={() => {
               if (!loadStatus) {return ;}
               // if (targetProblemNum.includes('-')) {
