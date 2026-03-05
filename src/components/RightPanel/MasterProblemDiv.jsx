@@ -16,7 +16,24 @@ import ChoiceEditor from './ChoiceEditor';
 import { ParsingChoice } from '../etc/parsingObject';
 
 
-export default function MasterDiv({_type = "Q"}) {
+
+const insepct_list = [
+  "question_id",
+  "section",
+  "problem_number",
+  "passage",
+  "question",
+  "options_text",
+  "score",
+  "answer",
+  "explanation",
+  "attachments",
+  "meta"
+]
+
+
+
+export default function MasterDiv() {
     const { masterProblemData, setMasterProblemData } = useContext(ProblemDataContext);
     const { problemInfoShow, 
             loadStatus } = useContext(EtcContext);
@@ -32,28 +49,28 @@ export default function MasterDiv({_type = "Q"}) {
       if (!loadStatus) { return; }
 
       if (targetSubject !== '') {
-          setUnitProblemData(masterProblemData.find(item => item.subject === targetSubject && item.problem_num == targetProblemNum));
-          setTargetIndex(masterProblemData.findIndex(item => item.subject === targetSubject && item.problem_num == targetProblemNum));
-          setUnitProblemIndex(masterProblemData.findIndex(item => item.subject === targetSubject && item.problem_num == targetProblemNum));
+          setUnitProblemData(masterProblemData.find(item => item.section === targetSubject && item.problem_number == targetProblemNum));
+          setTargetIndex(masterProblemData.findIndex(item => item.section === targetSubject && item.problem_number == targetProblemNum));
+          setUnitProblemIndex(masterProblemData.findIndex(item => item.section === targetSubject && item.problem_number == targetProblemNum));
       }
     }, [targetSubject, targetProblemNum, masterProblemData]);
 
 
 
-    if (_type == "Q") {
-      return (
+    return (
       <div style={{ textAlign: "left" }}>
           <ProblemMetaData problemInfoShow={problemInfoShow} problem_data={unitProblemData} />
 
-          <ProblemTitle  title="question_common" target_key="question_common" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+
+          <ProblemTitle  title="question_id" target_key="question_id" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
           masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
 
-          <ProblemTitle  title="passage_common" target_key="passage_common" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          <ProblemTitle  title="section" target_key="section" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
           masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
 
-          <ProblemTitle  title="question" target_key="question" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          <ProblemTitle  title="problem_number" target_key="problem_number" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
           masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
 
@@ -61,39 +78,38 @@ export default function MasterDiv({_type = "Q"}) {
           masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
 
-          <ProblemTitle  title="choices" target_key="choices" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          <ProblemTitle  title="question" target_key="question" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
           masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
-      </div>
-      )
-  }
 
-  else if (_type == "A") {
-    return (
-      <div style={{ textAlign: "left" }}>
-          <AnswerTitle title="explanation_common" target_key="explanation_common" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-                       masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex}   />
+          <ProblemTitle  title="options_text" target_key="options_text" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
-  
-          <AnswerTitle title="explanation" target_key="explanation" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-                       masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex}   />
+
+          <ProblemTitle  title="score" target_key="score" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
-  
-          <AnswerTitle title="explanation_wrongchoice" target_key="explanation_wrongchoice" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-                       masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex}   />
+
+          <ProblemTitle  title="answer" target_key="answer" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
-  
-          <AnswerTitle title="answer_multiple" target_key="answer_multiple" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-                       masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex}   />
+
+          <ProblemTitle  title="explanation" target_key="explanation" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
-  
-          <AnswerTitle title="answer_short" target_key="answer_short" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData}
-                       masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex}   />
+
+          <ProblemTitle  title="attachments" target_key="attachments" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
           <BoarderLine />
+
+          <ProblemTitle  title="meta" target_key="meta" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
+          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <BoarderLine />
+
       </div>
-      )
+    )
 }
-}
+
 
 function BoarderLine() {
   return (
@@ -101,6 +117,21 @@ function BoarderLine() {
   )
 }
 
+
+
+const edit_key = [
+  // "question_id",
+  // "section",
+  // "problem_number",
+  "passage",
+  "question",
+  "options_text",
+  // "score",
+  // "answer",
+  "explanation",
+  // "attachments",
+  // "meta"
+]
 
 function ProblemTitle({ title, target_key }) {
   const [ProblemEditorShow, setProblemEditorShow] = useState(false);
@@ -115,12 +146,17 @@ function ProblemTitle({ title, target_key }) {
   return (
   <div>
       <h3 class="text-lg font-semibold mb-3">{title} 
+
+        {edit_key.includes(title) && (
+        
         <CustomButton Text={ProblemEditorShow ? "View" : "Editor"} 
-              onClickFunction={() => {
-                if (!loadStatus) {
-                  return ;
-                }
-                setProblemEditorShow(!ProblemEditorShow)}}/>
+          onClickFunction={() => {
+            if (!loadStatus) {
+              return ;
+            }
+            setProblemEditorShow(!ProblemEditorShow)}}
+            />)}
+        
       </h3>
 
       <div style={{marginTop: "7px"}}></div>
@@ -137,18 +173,22 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
     const { unitProblemData, setUnitProblemData } = useContext(UnitProblemDataContext);
 
     const EditorChangeAction = (v) => {
+      console.log("v: ", v)
       setUnitProblemData(prev => ({
-        ...prev,
-        problem: {
-          ...prev.problem,
-          [target_key]: v,
-        },
+        ...(prev ?? {}),
+        [target_key]: v,
       }));
+      console.log("unitProblemData: ", unitProblemData)
     }
 
-    const contents = (typeof unitProblemData.problem[target_key] == 'object') ?
-                              ParsingChoice(unitProblemData.problem[target_key]) :
-                              unitProblemData.problem[target_key];
+
+    const contents = (typeof unitProblemData[target_key] == 'object') ?
+                              ParsingChoice(unitProblemData[target_key]) :
+                              unitProblemData[target_key] ?? "null";
+
+    
+    
+    // const contents = unitProblemData[target_key] ?? "None";
 
     if (!ProblemEditorShow) {
         return(
@@ -157,17 +197,17 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
       }
       else {
         // Editor button을 눌렀을 때
-        if (target_key == "choices") {
+        if (target_key in ["attachments", "meta"]) {
             return (
                   <ChoiceEditor 
-                      content={unitProblemData.problem[target_key]} 
+                      content={unitProblemData[target_key]} 
                       onChange={EditorChangeAction} 
                       />
           )
         } else {
             return (
                   <MarkdownEditor 
-                      content={unitProblemData.problem[target_key]} 
+                      content={unitProblemData[target_key]} 
                       onChange={EditorChangeAction} 
                       />
           );
@@ -220,10 +260,7 @@ function DivAnswerEdit({target_key, AnswerEditorShow}) {
     const EditorChangeAction = (v) => {
       setUnitProblemData(prev => ({
         ...prev,
-        answer: {
-          ...prev.answer,
-          [target_key]: v,
-        },
+        [target_key]: v,
       }));
     }
 

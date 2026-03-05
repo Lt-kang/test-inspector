@@ -5,38 +5,40 @@ export const ProblemDataContext = createContext();
 export const ProblemDataProvider = ({ children }) => {
   const [fileName, setFileName] = useState(['']);
   const [metaData, setMetaData] = useState({
-    test_type: 'test_type',
-    organizer: 'organizer',
-    date: 'date',
-    duration: 'duration',
+    year: null,
+    type: null,
+    subject: null
   });
   const [totalProblemNum, setTotalProblemNum] = useState(0);
 
   const [jsonFileName, setJsonFileName] = useState('');
 
-  const [masterProblemData, setMasterProblemData] = useState([{
-    grade: 'grade',
-    subject: 'subject',
-    page_num: 'page_num',
-    problem_num: 'problem_num',
-    answer_type: 'answer_type',
-    score: 'score',
-    image_complete: [],
-    problem: {
-      question_common: 'question_common',
-      passage_common: 'passage_common',
-      question: 'question',
-      passage: 'passage',
-      choices: {}
-    },
-    answer: {
-      explanation_common: 'explanation_common',
-      explanation: 'explanation',
-      explanation_wrongchoice: {},
-      answer_multiple: 'answer_multiple',
-      answer_short: 'answer_short'
+  const [masterProblemData, setMasterProblemData] = useState([
+    {
+      question_id: null,
+      section: null,
+      problem_number: null,
+      passage: null,
+      question: null,
+      options_text: null,
+      score: null,
+      answer: null,
+      explanation: null,
+      attachments: {
+        passage: null,
+        question: null,
+        options_text: null,
+        answer: null,
+        explanation: null
+      },
+      meta: {
+        problem_type: null,
+        image_full: null,
+        image_full_type: null,
+        source: null
+      }
     }
-  }]);
+]);
 
     return (
       <ProblemDataContext.Provider value={{ fileName, setFileName, 

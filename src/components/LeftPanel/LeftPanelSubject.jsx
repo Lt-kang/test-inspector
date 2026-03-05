@@ -27,8 +27,8 @@ function SubjectList({ subject, subjectCount, masterProblemData}) {
               </button>
           <div data-state={isOpen ? "open" : "closed"} id="test_id" hidden="" className="space-y-1 mt-1" style={isOpen ? openStyle : {}}></div>
           {isOpen && <div>
-            {masterProblemData.filter(item => item.subject === subject).map(item => (
-                <UnitProblemList key={`${subject}-${item.problem_num}`} subject={subject} problemNum={item.problem_num} />
+            {masterProblemData.filter(item => item.section === subject).map(item => (
+                <UnitProblemList key={`${subject}-${item.problem_number}`} subject={subject} problemNum={item.problem_number} />
             ))}
           </div>}
         </div>
@@ -72,8 +72,8 @@ function UnitProblemList({ subject, problemNum }) {
 export default function LeftPanelSubject() {
     const { masterProblemData } = useContext(ProblemDataContext);
 
-    const subjectSet = new Set(masterProblemData.map(item => item.subject));
-    const subjectCount = new Map(Array.from(subjectSet).map(subject => [subject, masterProblemData.filter(item => item.subject === subject).length]));
+    const subjectSet = new Set(masterProblemData.map(item => item.section));
+    const subjectCount = new Map(Array.from(subjectSet).map(subject => [subject, masterProblemData.filter(item => item.section === subject).length]));
     
 
   return (

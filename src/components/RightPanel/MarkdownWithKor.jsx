@@ -44,7 +44,9 @@ export default function KorMarkdownViewer({content}) {
           {/* {unitProblemData.subject.includes("수학") ? content.replace(/\n/g, '  \n') : content.replace(/\n/g, '  \n  ▽  \n')} */}
           {/* {content.replace(/\n\n/g, '  \n□  \n').replace(/\n/g, '  \n')} */}
 
-          {lineBreakSwitch ? content.replace(/\n/g, '  \n') : content.replace(/\n/g, '  \n  ▽  \n')}
+          {String(content ?? 'null')}
+          {/* {lineBreakSwitch ? (content ?? 'null').replace(/\n/g, '  \n') : (content ?? 'null').replace(/\n/g, '  \n  ▽  \n')} */}
+          
           </ReactMarkdown>
       </div>
     </div>

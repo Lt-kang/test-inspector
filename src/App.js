@@ -9,7 +9,6 @@ import HistoryPopup from './components/Popup/HistoryPopup';
 import JsonViewerPopup from './components/Popup/JsonPopup';
 
 import { ProblemDataProvider } from './context/ProblemDataContext';
-import { ProblemCountProvider } from './context/ProblemCountContext'
 import { TargetKeyProvider } from './context/TargetKeyContext';
 import { EtcProvider } from './context/EtcContext';
 import { HistoryProvider } from './context/HistoryContext';
@@ -37,33 +36,31 @@ function App() {
 
   return (
     <ProblemDataProvider>
-        <ProblemCountProvider>
-          <TargetKeyProvider>
-            <EtcProvider>
-              <HistoryProvider>
+        <TargetKeyProvider>
+          <EtcProvider>
+            <HistoryProvider>
 
         <div className="App" style={bodyStyle}>
           <div className="min-h-screen bg-background">
-          <TopNav />
+            <TopNav />
 
-            <div className="container mx-auto px-4 py-6">
-              <div className="grid lg:grid-cols-5 gap-6">
-                <LeftPanel />
+              <div className="container mx-auto px-4 py-6">
+                <div className="grid lg:grid-cols-5 gap-6">
+                  <LeftPanel />
 
                   <RightPanel />
-                    {isPopupOpen && <HistoryPopup />}
-
-                    {isJsonPopupOpen && <JsonViewerPopup />}
+                  
+                  {isPopupOpen && <HistoryPopup />}
+                  {isJsonPopupOpen && <JsonViewerPopup />}
 
               </div>
             </div>
           </div>
         </div>
 
-              </HistoryProvider>
-            </EtcProvider>
-          </TargetKeyProvider>
-        </ProblemCountProvider>
+            </HistoryProvider>
+          </EtcProvider>
+        </TargetKeyProvider>
     </ProblemDataProvider>
   );
 }

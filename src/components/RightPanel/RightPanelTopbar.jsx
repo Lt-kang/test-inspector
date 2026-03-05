@@ -1,6 +1,6 @@
-import { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, SaveButton, LineBreakButton } from './Button';
+import { SaveButton, LineBreakButton } from './Button';
 
-import { useState, useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { ProblemDataContext } from '../../context/ProblemDataContext';
 import { TargetKeyContext } from '../../context/TargetKeyContext';
 import { EtcContext } from '../../context/EtcContext';
@@ -24,14 +24,14 @@ function RightPanelTopbar() {
 
   const { masterProblemData, setMasterProblemData } = useContext(ProblemDataContext);
   const { targetSubject, targetProblemNum, setTargetProblemNum } = useContext(TargetKeyContext);
-  const { loadStatus, problemInfoShow, setProblemInfoShow } = useContext(EtcContext);
+  const { loadStatus } = useContext(EtcContext);
 
   const { unitProblemData, unitProblemIndex } = useContext(UnitProblemDataContext);
 
   const { setHistory } = useContext(HistoryContext);
 
 
-  const targetSubjectCount = masterProblemData.filter(item => item.subject === targetSubject).length;
+  const targetSubjectCount = masterProblemData.filter(item => item.section === targetSubject).length;
 
   const SaveAction = () => {
     /*
@@ -41,39 +41,29 @@ function RightPanelTopbar() {
     if (!loadStatus) {
       return ;
     }
-
-
-    for (const key in unitProblemData.problem) {
+  
+    // for (const key in unitProblemData.problem) {
       // if (unitProblemData.problem[key] !== masterProblemData[unitProblemIndex].problem[key] && unitProblemData.problem[key] != "[object Object]") {
-      if (unitProblemData.problem[key] !== masterProblemData[unitProblemIndex].problem[key]){
-        setHistory(prev => [...prev, {
-          index: prev.length + 1,
-          subject: unitProblemData.subject,
-          problem_num: unitProblemData.problem_num,
-          key: key,
-          // value_before: masterProblemData[unitProblemIndex].problem[key],
-          value_before: (typeof masterProblemData[unitProblemIndex].problem[key] == 'object') ? JSON.stringify(masterProblemData[unitProblemIndex].problem[key], null, 4) : masterProblemData[unitProblemIndex].problem[key],
-          value_after: (typeof unitProblemData.problem[key] == 'object') ? JSON.stringify(unitProblemData.problem[key], null, 4) : unitProblemData.problem[key],
-        }]);
-      }
-    }
+    //   if (unitProblemData.problem[key] !== masterProblemData[unitProblemIndex].problem[key]){
+    //     setHistory(prev => [...prev, {
+    //       index: prev.length + 1,
+    //       subject: unitProblemData.subject,
+    //       problem_num: unitProblemData.problem_num,
+    //       key: key,
+    //       // value_before: masterProblemData[unitProblemIndex].problem[key],
+    //       value_before: (typeof masterProblemData[unitProblemIndex][key] == 'object') ? JSON.stringify(masterProblemData[unitProblemIndex][key], null, 4) : masterProblemData[unitProblemIndex][key],
+    //       value_after: (typeof unitProblemData[key] == 'object') ? JSON.stringify(unitProblemData[key], null, 4) : unitProblemData[key],
+    //     }]);
+    //   }
+    // }
 
-    for (const key in unitProblemData.answer) {
-      //if (unitProblemData.answer[key] !== masterProblemData[unitProblemIndex].answer[key] && unitProblemData.answer[key] != "[object Object]") {
-      if (unitProblemData.answer[key] !== masterProblemData[unitProblemIndex].answer[key]){
-        setHistory(prev => [...prev, {
-          index: prev.length + 1,
-          subject: unitProblemData.subject,
-          problem_num: unitProblemData.problem_num,
-          key: key,
-          value_before: (typeof masterProblemData[unitProblemIndex].answer[key] == 'object') ? JSON.stringify(masterProblemData[unitProblemIndex].answer[key], null, 4) : masterProblemData[unitProblemIndex].answer[key],
-          value_after: (typeof unitProblemData.answer[key] == 'object') ? JSON.stringify(unitProblemData.answer[key], null, 4) : unitProblemData.answer[key],
-        }]);
-      }
-    }
 
     const updatedMasterProblemData = [...masterProblemData];
     updatedMasterProblemData[unitProblemIndex] = unitProblemData;
+
+    console.log("updatedMasterProblemData: ", updatedMasterProblemData)
+    console.log("unitProblemData: ", unitProblemData)
+    console.log("updatedMasterProblemData[unitProblemIndex]: ", updatedMasterProblemData[unitProblemIndex])
 
     setMasterProblemData(updatedMasterProblemData);
   }
@@ -84,27 +74,10 @@ function RightPanelTopbar() {
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="font-semibold tracking-tight text-xl" style={{ textAlign: "left" }}>Problem {targetProblemNum}</div>
-              <div className="flex gap-2 flex-wrap">
-                <div className={someDivClass + " bg-secondary text-secondary-foreground hover:bg-secondary/80"}>
-                  {unitProblemData.subject}
-                </div>
-                <div className={someDivClass}>
-                  {unitProblemData.answer_type}
-                </div>
-                <div className={someDivClass}>
-                  {unitProblemData.score.endsWith('점') ? unitProblemData.score : unitProblemData.score + '점'}
-                </div>
-                <div className={someDivClass}>
-                  {unitProblemData.grade.endsWith('학년') ? unitProblemData.grade : unitProblemData.grade + '학년'}
-                </div>
-                <div className={someDivClass}>
-                  p.{unitProblemData.page_num}
-                </div>
-              </div>
             </div>
           <div className="flex gap-2">
 
-          <LineBreakButton />
+          {/* <LineBreakButton /> */}
 
           <SaveButton onClickFunction={SaveAction}
                       loadCheck={loadStatus} />
@@ -114,13 +87,10 @@ function RightPanelTopbar() {
 
             <div className="border-l mx-2"></div>
 
-            <ProblemInfoButton onClickFunction={() => { if (!loadStatus) {return ;}
-                                                        setProblemInfoShow(!problemInfoShow)}} />
-            <CorrectButton onClickFunction={() => {}} />
-            <WrongButton onClickFunction={() => {}} />
-            <UnresolvedButton onClickFunction={() => {}} />
+            {/* <ProblemInfoButton onClickFunction={() => { if (!loadStatus) {return ;}
+                                                        setProblemInfoShow(!problemInfoShow)}} /> */}
 
-            <div className="border-l mx-2"></div>
+
 
             <button className={someButtonClass} 
             disabled={targetProblemNum == 1 && !(isUnitJsonPopupOpen || isJsonPopupOpen || isPopupOpen)}
@@ -131,7 +101,7 @@ function RightPanelTopbar() {
               // } else {
               //   setTargetProblemNum(parseInt(targetProblemNum));
               // }
-              setTargetProblemNum(targetProblemNum);
+              setTargetProblemNum(parseInt(targetProblemNum)-1);
             }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left h-4 w-4">
                 <path d="m15 18-6-6 6-6"></path>
@@ -147,7 +117,7 @@ function RightPanelTopbar() {
               // } else {
               //   setTargetProblemNum(parseInt(targetProblemNum));
               // }
-              setTargetProblemNum(targetProblemNum);
+              setTargetProblemNum(parseInt(targetProblemNum)+1);
             }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right h-4 w-4">
                 <path d="m9 18 6-6-6-6"></path>

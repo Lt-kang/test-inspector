@@ -1,7 +1,3 @@
-import React, { useState } from "react";
-
-
-import { AnswerHideButton } from './RightPanel/Button';
 import RightPanelTopbar from './RightPanel/RightPanelTopbar';
 import MasterDiv from './RightPanel/MasterProblemDiv';
 
@@ -9,16 +5,8 @@ import { UnitProblemDataProvider } from './RightPanel/UnitProblemDataContext';
 
 
 
-function BoarderLine() {
-  return (
-    <div className="border-t my-6"></div>
-  )
-}
-
-
 
 export default function RightPanel() {
-  const [answerShow, setAnswerShow] = useState(true);
   return (
     <UnitProblemDataProvider>
 
@@ -31,13 +19,7 @@ export default function RightPanel() {
               <div className="h-[1400px] overflow-y-auto pr-4">
                 <div className="space-y-6">
 
-                  <MasterDiv _type="Q" />
-
-                  <BoarderLine />
-
-                  <AnswerHideButton answerShow={answerShow} setAnswerShow={setAnswerShow} />
-
-                  {answerShow && <MasterDiv _type="A" />}
+                  <MasterDiv />
                   
                 </div>
               </div>

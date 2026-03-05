@@ -24,7 +24,7 @@ function ParsingChoice(choice) {
   let text = ""
 
   for (const key in choice) {
-    text += `**${key}**: ${choice[key]}\n\n`
+    text += `**${key}**: ${choice[key] ?? "null"}\n\n`
   }
   
   return text
