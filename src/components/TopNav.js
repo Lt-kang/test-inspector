@@ -93,16 +93,13 @@ export default function TopNav() {
     if (!loadStatus) return;
 
     const safeBase = String(jsonFileName || 'export')
-    .replace(/\.(json)$/i, '')
-    .replace(/[\\/:*?"<>|]/g, '_');
-  
+      .replace(/\.(json)$/i, '')
+      .replace(/[\\/:*?"<>|]/g, '_');
 
-  
-    // 1) 안전 직렬화
+    // 직렬화된 jsonData만 저장
     const jsonData = {
-      file_name: fileName,
-      meta: metaData,
-      data: masterProblemData,
+      info: metaData,
+      questions: masterProblemData,
     };
 
     const seen = new WeakSet();
@@ -121,59 +118,110 @@ export default function TopNav() {
       return;
     }
 
-    // 2) history.csv 생성
-    const historyCsv = history.map(item => 
-      [
-        escapeCsv(item.index),
-        escapeCsv(item.subject),
-        escapeCsv(item.problem_num),
-        escapeCsv(item.key),
-        escapeCsv(item.value_before),
-        escapeCsv(item.value_after)
-      ].join(',')
-    ).join('\n');
-
-
-    const csvHeader = "index,subject,problem_num,key,value_before,value_after\n";
+    // 파일 저장 (Object URL 방식)
     const BOM = "\uFEFF";
+    const blob = new Blob([BOM, jsonString], { type: 'application/json;charset=utf-8' });
 
-    const historyCsvBlob = new Blob([BOM, csvHeader, ...historyCsv], { type: 'text/csv;charset=utf-8-sig' });
-
-
-    // 3) zip 생성
-    const zip = new JSZip();
-    zip.file(`${safeBase}.json`, jsonString);
-    zip.file(`${safeBase}_history.csv`, historyCsvBlob);
-    const zipBlob = await zip.generateAsync({ type: 'blob' });
-
-
-
-    // const _date = new Date().toISOString()
+    // 날짜 정보
     const _date = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Seoul" });
-
     const _dateDay = _date.split(' ')[0].replaceAll('-', '')
     const _dateTime = _date.split(' ')[1].replaceAll(':', '')
 
-    const zipUrl = URL.createObjectURL(zipBlob);
-    const zipA = document.createElement('a');
-    zipA.href = zipUrl;
-    zipA.download = `${safeBase}+${_dateDay}+${_dateTime}.zip`;
-    document.body.appendChild(zipA);
-    zipA.click();
-    document.body.removeChild(zipA);
-    setTimeout(() => URL.revokeObjectURL(zipUrl), 0);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${safeBase}+${_dateDay}+${_dateTime}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
+  
+  // const exportJson = async () => {
+  //   if (!loadStatus) return;
+
+  //   const safeBase = String(jsonFileName || 'export')
+  //   .replace(/\.(json)$/i, '')
+  //   .replace(/[\\/:*?"<>|]/g, '_');
+  
 
   
-    // 5) 저장 (Object URL 방식)
-    // const url = URL.createObjectURL(zipBlob);
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = `${safeBase}.zip`;
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
-    // setTimeout(() => URL.revokeObjectURL(url), 0);
-  };
+  //   // 1) 안전 직렬화
+  //   const jsonData = {
+  //     // file_name: fileName,
+  //     info: metaData,
+  //     questions: masterProblemData,
+  //   };
+
+  //   const seen = new WeakSet();
+  //   let jsonString;
+  //   try {
+  //     jsonString = JSON.stringify(jsonData, (k, v) => {
+  //       if (typeof v === 'object' && v !== null) {
+  //         if (seen.has(v)) return '[Circular]';
+  //         seen.add(v);
+  //       }
+  //       return v;
+  //     }, 4);
+  //   } catch (e) {
+  //     console.error('JSON 직렬화 실패:', e);
+  //     alert('데이터 직렬화에 실패했습니다.');
+  //     return;
+  //   }
+
+  //   // 2) history.csv 생성
+  //   const historyCsv = history.map(item => 
+  //     [
+  //       escapeCsv(item.index),
+  //       escapeCsv(item.subject),
+  //       escapeCsv(item.problem_num),
+  //       escapeCsv(item.key),
+  //       escapeCsv(item.value_before),
+  //       escapeCsv(item.value_after)
+  //     ].join(',')
+  //   ).join('\n');
+
+
+  //   const csvHeader = "index,subject,problem_num,key,value_before,value_after\n";
+  //   const BOM = "\uFEFF";
+
+  //   const historyCsvBlob = new Blob([BOM, csvHeader, ...historyCsv], { type: 'text/csv;charset=utf-8-sig' });
+
+
+  //   // 3) zip 생성
+  //   const zip = new JSZip();
+  //   zip.file(`${safeBase}.json`, jsonString);
+  //   zip.file(`${safeBase}_history.csv`, historyCsvBlob);
+  //   const zipBlob = await zip.generateAsync({ type: 'blob' });
+
+
+
+  //   // const _date = new Date().toISOString()
+  //   const _date = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Seoul" });
+
+  //   const _dateDay = _date.split(' ')[0].replaceAll('-', '')
+  //   const _dateTime = _date.split(' ')[1].replaceAll(':', '')
+
+  //   const zipUrl = URL.createObjectURL(zipBlob);
+  //   const zipA = document.createElement('a');
+  //   zipA.href = zipUrl;
+  //   zipA.download = `${safeBase}+${_dateDay}+${_dateTime}.zip`;
+  //   document.body.appendChild(zipA);
+  //   zipA.click();
+  //   document.body.removeChild(zipA);
+  //   setTimeout(() => URL.revokeObjectURL(zipUrl), 0);
+
+  
+  //   // 5) 저장 (Object URL 방식)
+  //   // const url = URL.createObjectURL(zipBlob);
+  //   // const a = document.createElement('a');
+  //   // a.href = url;
+  //   // a.download = `${safeBase}.zip`;
+  //   // document.body.appendChild(a);
+  //   // a.click();
+  //   // document.body.removeChild(a);
+  //   // setTimeout(() => URL.revokeObjectURL(url), 0);
+  // };
 
   const handlePopupOpen = () => {
     if (!loadStatus) { return;}
