@@ -1,6 +1,6 @@
 import RightPanelTopbar from './RightPanel/RightPanelTopbar';
 import MasterDiv from './RightPanel/MasterProblemDiv';
-import ProblemAttachments from './RightPanel/ProblemAttachments';
+
 
 import { UnitProblemDataProvider } from './RightPanel/UnitProblemDataContext';
 
@@ -21,8 +21,6 @@ export default function RightPanel() {
                 <div className="space-y-6">
 
                   <MasterDiv />
-
-                  {/* <ProblemAttachments /> */}
                   
                 </div>
               </div>

@@ -15,7 +15,7 @@ import ChoiceEditor from './ChoiceEditor';
 
 import { ParsingChoice } from '../etc/parsingObject';
 
-
+import ProblemAttachments from './ProblemAttachments';
 
 
 export default function MasterDiv() {
@@ -73,11 +73,13 @@ export default function MasterDiv() {
           <ProblemTitle  title="explanation" target_key="explanation" />
           <BoarderLine />
 
-          <ProblemTitle  title="attachments" target_key="attachments" />
-          <BoarderLine />
+          {/* <ProblemTitle  title="attachments" target_key="attachments" />
+          <BoarderLine /> */}
 
           {/* <ProblemTitle  title="meta" target_key="meta" />
           <BoarderLine /> */}
+
+          <ProblemAttachments />
 
       </div>
     )
