@@ -166,8 +166,7 @@ export default function TopNav() {
             <MainTitle fileName={fileName} />
 
             <div className="flex items-center gap-2">
-              {/* <HistoryButton text="History" onClick={() => {}} /> */}
-              <HistoryButton text="History" onClick={handlePopupOpen} />
+              {/* <HistoryButton text="History" onClick={handlePopupOpen} /> */}
 
               <input accept=".json" className="hidden" id="file-upload" type="file" onChange={loadJson} />
               <UploadButton text="파일 업로드" />
