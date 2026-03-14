@@ -1,6 +1,6 @@
-import { SaveButton } from './Button';
+import { SaveButton, FlashButton } from './Button';
 
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { ProblemDataContext } from '../../context/ProblemDataContext';
 import { TargetKeyContext } from '../../context/TargetKeyContext';
 import { EtcContext } from '../../context/EtcContext';
@@ -27,6 +27,11 @@ function RightPanelTopbar() {
   const { unitProblemData, unitProblemIndex } = useContext(UnitProblemDataContext);
 
   const targetSubjectCount = masterProblemData.filter(item => item.section === targetSubject).length;
+
+  const saveButtonRef = useRef(null);
+  const resetRef = useRef(null);
+  const prevRef  = useRef(null);
+  const nextRef  = useRef(null);
 
   const SaveAction = () => {
     if (!loadStatus) return;
@@ -55,6 +60,22 @@ function RightPanelTopbar() {
   };
 
   const currentStatus = problemStatuses[unitProblemData?.question_id] ?? null;
+
+  useEffect(() => {
+    const handler = (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (e.key === 'w' || e.key === 'W') markStatus(currentStatus === 'correct' ? null : 'correct');
+      if (e.key === 'e' || e.key === 'E') markStatus(currentStatus === 'wrong' ? null : 'wrong');
+      if (e.key === 'r' || e.key === 'R') resetRef.current?.click();
+      if (e.key === 'q' || e.key === 'Q') saveButtonRef.current?.click();
+      if (e.key === 'd' || e.key === 'D') prevRef.current?.click();
+      if (e.key === 'f' || e.key === 'F') nextRef.current?.click();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStatus, unitProblemData, loadStatus, targetProblemNum, targetSubjectCount]);
 
   const problemTypeLabel = {
     multiple_choice: '객관식',
@@ -86,7 +107,7 @@ function RightPanelTopbar() {
         </div>
 
         <div className="flex gap-2">
-          <SaveButton onClickFunction={SaveAction} loadCheck={loadStatus} />
+          <SaveButton ref={saveButtonRef} onClickFunction={SaveAction} loadCheck={loadStatus} />
 
           <div className="border-l mx-2"></div>
           
@@ -121,36 +142,36 @@ function RightPanelTopbar() {
             </svg>
           </button>
 
-          <button className={someButtonClass} onClick={() => markStatus(null)}>
+          <FlashButton ref={resetRef} noMargin onClickFunction={() => markStatus(null)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-rotate-ccw h-4 w-4">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
               <path d="M3 3v5h5"></path>
             </svg>
-          </button>
+          </FlashButton>
 
           <div className="border-l mx-2"></div>
 
-          <button className={someButtonClass}
+          <FlashButton
+            ref={prevRef}
+            noMargin
             disabled={parseInt(targetProblemNum) === 1 && !(isUnitJsonPopupOpen || isJsonPopupOpen || isPopupOpen)}
-            onClick={() => {
-              if (!loadStatus) return;
-              setTargetProblemNum(parseInt(targetProblemNum) - 1);
-            }}>
+            onClickFunction={() => { if (!loadStatus) return; setTargetProblemNum(parseInt(targetProblemNum) - 1); }}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left h-4 w-4">
               <path d="m15 18-6-6 6-6"></path>
             </svg>
-          </button>
+          </FlashButton>
 
-          <button className={someButtonClass}
+          <FlashButton
+            ref={nextRef}
+            noMargin
             disabled={parseInt(targetProblemNum) === targetSubjectCount}
-            onClick={() => {
-              if (!loadStatus) return;
-              setTargetProblemNum(parseInt(targetProblemNum) + 1);
-            }}>
+            onClickFunction={() => { if (!loadStatus) return; setTargetProblemNum(parseInt(targetProblemNum) + 1); }}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right h-4 w-4">
               <path d="m9 18 6-6-6-6"></path>
             </svg>
-          </button>
+          </FlashButton>
         </div>
       </div>
     </div>

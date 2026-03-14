@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 
 function ProblemInfoButton({onClickFunction}) {
     return (
@@ -61,9 +61,9 @@ function CustomButton({onClickFunction, Text, style={}, noMargin=false}) {
 
 
 
-function SaveButton({onClickFunction, loadCheck, Text="Save", style={}, noMargin=false}) {
+const SaveButton = forwardRef(function SaveButton({onClickFunction, loadCheck, Text="Save", style={}, noMargin=false}, ref) {
   const [saveState, setSaveState] = useState('idle'); // 'idle', 'saving', 'saved'
-  
+
   const handleClick = () => {
       if (!loadCheck) {
         return ;
@@ -80,7 +80,7 @@ function SaveButton({onClickFunction, loadCheck, Text="Save", style={}, noMargin
           // 2초 후 원래 상태로 복귀
           setTimeout(() => {
               setSaveState('idle');
-          }, 2000);
+          }, 1500);
       } catch (error) {
         // console.log(error);
           setSaveState('idle');
@@ -112,20 +112,22 @@ function SaveButton({onClickFunction, loadCheck, Text="Save", style={}, noMargin
   };
   
   const getButtonClass = () => {
-      let baseClass = "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input h-9 rounded-md px-3";
-      
+      let baseClass = "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input h-9 rounded-md px-3";
+      // let baseClass = "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input h-9 rounded-md px-3 transition-all duration-300";
+
       switch(saveState) {
           case 'saving':
               return baseClass + " bg-blue-50 border-blue-300 text-blue-700 cursor-wait";
           case 'saved':
-              return baseClass + " bg-green-50 border-green-300 text-green-700 animate-pulse";
+              return baseClass + " bg-green-50 border-green-300 text-green-700"; //  animate-pulse
           default:
               return baseClass + " bg-background hover:bg-accent hover:text-accent-foreground";
       }
   };
   
   return (
-      <button 
+      <button
+          ref={ref}
           className={getButtonClass()}
           style={{...style, marginLeft: noMargin ? "0px" : "5px"}}
           onClick={handleClick}
@@ -134,7 +136,7 @@ function SaveButton({onClickFunction, loadCheck, Text="Save", style={}, noMargin
           {getButtonContent()}
       </button>
   )
-}
+});
 
 
 function SpecialCustomButton({onClickFunction, Text, style={}, noMargin=false}) {
@@ -164,18 +166,36 @@ function KeyButton({keyInfo, setKeyInfo}) {
   )
 }
 
-function AnswerToggleButton({ show, onClick }) {
-  const base = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2";
+
+
+const flashBase = "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input h-9 rounded-md px-3 transition-all duration-500"; // origin
+
+const FlashButton = forwardRef(function FlashButton(
+  { onClickFunction, disabled, children, style={}, noMargin=false },
+  ref
+) {
+  const [active, setActive] = useState(false);
+
+  const handleClick = () => {
+    if (disabled) return;
+    setActive(true);
+    onClickFunction?.();
+    setTimeout(() => setActive(false), 700);
+  };
+
   return (
     <button
-      className={show
-        ? `${base} bg-secondary text-secondary-foreground hover:bg-secondary/80`
-        : `${base} bg-primary text-primary-foreground hover:bg-primary/90`}
-      onClick={onClick}
+      ref={ref}
+      className={active
+        ? `${flashBase} bg-gray-100 border-gray-600 text-gray-1000` //  animate-pulse
+        : `${flashBase} bg-background hover:bg-accent hover:text-accent-foreground`}
+      style={{ ...style, marginLeft: noMargin ? "0px" : "5px" }}
+      onClick={handleClick}
+      disabled={disabled}
     >
-      {show ? '[Close] attachments' : '[Open] attachments'}
+      {children}
     </button>
   );
-}
+});
 
-export { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, CustomButton, SpecialCustomButton, KeyButton, SaveButton, AnswerToggleButton };
+export { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, CustomButton, SpecialCustomButton, KeyButton, SaveButton, FlashButton };
