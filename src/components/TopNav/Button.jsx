@@ -172,4 +172,21 @@ function RawJSON({onClick}){
   )
 }
 
-  export { HistoryButton, ExportButton, UploadButton, RawJSON };
+
+function HelpButton({ onClick }) {
+  return (
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
+      onClick={onClick}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-circle-help h-4 w-4">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <path d="M12 17h.01"></path>
+      </svg>
+      도움말
+    </button>
+  );
+}
+
+  export { HistoryButton, ExportButton, UploadButton, RawJSON, HelpButton };

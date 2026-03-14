@@ -10,14 +10,15 @@ import { PopupContext } from '../../context/PopupContext';
 
 import UnitJsonViewerPopup from '../Popup/UnitJsonPopup';
 
-
+import { LineBreakButton } from './Button';
 
 const someButtonClass = "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
 
 function RightPanelTopbar() {
-  const { isUnitJsonPopupOpen, 
+  const { isUnitJsonPopupOpen,
           isJsonPopupOpen,
-          isPopupOpen } = useContext(PopupContext);
+          isPopupOpen,
+          isHelpPopupOpen } = useContext(PopupContext);
    
 
   const { masterProblemData, setMasterProblemData } = useContext(ProblemDataContext);
@@ -68,7 +69,7 @@ function RightPanelTopbar() {
       if (e.key === 'w' || e.key === 'W') markStatus(currentStatus === 'correct' ? null : 'correct');
       if (e.key === 'e' || e.key === 'E') markStatus(currentStatus === 'wrong' ? null : 'wrong');
       if (e.key === 'r' || e.key === 'R') resetRef.current?.click();
-      if (e.key === 'q' || e.key === 'Q') saveButtonRef.current?.click();
+      if (e.key === 's' || e.key === 'S') saveButtonRef.current?.click();
       if (e.key === 'd' || e.key === 'D') prevRef.current?.click();
       if (e.key === 'f' || e.key === 'F') nextRef.current?.click();
     };
@@ -92,6 +93,9 @@ function RightPanelTopbar() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="font-semibold tracking-tight text-xl" style={{ textAlign: "left" }}>Problem {targetProblemNum}</div>
+
+          
+
           <div className="flex gap-2 flex-wrap">
             <div className={badgeFilled}>{targetSubject || '과목'}</div>
             <div className={badgeOutline}>{problemTypeLabel || '문제유형'}</div>
@@ -108,6 +112,10 @@ function RightPanelTopbar() {
 
         <div className="flex gap-2">
           <SaveButton ref={saveButtonRef} onClickFunction={SaveAction} loadCheck={loadStatus} />
+
+          <div className="border-l mx-2"></div>
+
+          <LineBreakButton />
 
           <div className="border-l mx-2"></div>
           
@@ -154,7 +162,7 @@ function RightPanelTopbar() {
           <FlashButton
             ref={prevRef}
             noMargin
-            disabled={parseInt(targetProblemNum) === 1 && !(isUnitJsonPopupOpen || isJsonPopupOpen || isPopupOpen)}
+            disabled={parseInt(targetProblemNum) === 1 && !(isUnitJsonPopupOpen || isJsonPopupOpen || isPopupOpen || isHelpPopupOpen)}
             onClickFunction={() => { if (!loadStatus) return; setTargetProblemNum(parseInt(targetProblemNum) - 1); }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left h-4 w-4">

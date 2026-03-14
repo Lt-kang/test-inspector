@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import JSZip from 'jszip';
 
-import { HistoryButton, ExportButton, UploadButton, RawJSON } from './TopNav/Button';
+import { HistoryButton, ExportButton, UploadButton, RawJSON, HelpButton } from './TopNav/Button';
+import HelpPopup from './Popup/HelpPopup';
 
 import { ProblemDataContext } from '../context/ProblemDataContext';
 import { TargetKeyContext } from '../context/TargetKeyContext';
@@ -25,7 +26,8 @@ export default function TopNav() {
   const { setHistory } = useContext(HistoryContext);
 
   const { isPopupOpen, setIsPopupOpen,
-          isJsonPopupOpen, setIsJsonPopupOpen } = useContext(PopupContext);
+          isJsonPopupOpen, setIsJsonPopupOpen,
+          isHelpPopupOpen, setIsHelpPopupOpen } = useContext(PopupContext);
 
 
   const loadJson = async (e) => {
@@ -167,13 +169,18 @@ export default function TopNav() {
 
             <div className="flex items-center gap-2">
               {/* <HistoryButton text="History" onClick={handlePopupOpen} /> */}
+              <HelpButton onClick={() => setIsHelpPopupOpen(!isHelpPopupOpen)} />
 
               <input accept=".json" className="hidden" id="file-upload" type="file" onChange={loadJson} />
               <UploadButton text="파일 업로드" />
 
+              
+
               <ExportButton text="마킹 다운로드" onClick={exportJson} />
 
               <RawJSON onClick={handleJsonPopupOpen} />
+
+              <HelpPopup />
             </div>
           </div>
 
