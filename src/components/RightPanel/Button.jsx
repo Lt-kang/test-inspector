@@ -1,5 +1,4 @@
-import { useState, useContext } from 'react';
-import { UnitProblemDataContext } from './UnitProblemDataContext';
+import { useState } from 'react';
 
 function ProblemInfoButton({onClickFunction}) {
     return (
@@ -60,23 +59,6 @@ function CustomButton({onClickFunction, Text, style={}, noMargin=false}) {
 }
 
 
-function LineBreakButton() {
-  const { lineBreakSwitch, setLineBreakSwitch } = useContext(UnitProblemDataContext);
-
-  const handleClick = () => {
-    setLineBreakSwitch(!lineBreakSwitch);
-  }
-
-  return (
-        <button 
-        className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
-        onClick={handleClick}
-    >
-        {lineBreakSwitch ? "\\n -> ▽" : "▽ -> \\n"}
-    </button>
-  )
-}
-
 
 
 function SaveButton({onClickFunction, loadCheck, Text="Save", style={}, noMargin=false}) {
@@ -93,8 +75,7 @@ function SaveButton({onClickFunction, loadCheck, Text="Save", style={}, noMargin
         
           onClickFunction();
 
-          console.log("SaveButton clicked");
-          setSaveState('saved');
+        setSaveState('saved');
           
           // 2초 후 원래 상태로 복귀
           setTimeout(() => {
@@ -169,19 +150,6 @@ function SpecialCustomButton({onClickFunction, Text, style={}, noMargin=false}) 
 }
 
 
-const button_on = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
-const button_off = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-function AnswerHideButton({answerShow, setAnswerShow}) {
-    return (
-      <div class="flex justify-center">
-      <button class={answerShow ? button_on : button_off}
-              onClick={() => setAnswerShow(!answerShow)}>
-        {answerShow ? "해답 숨기기" : "해답 보기"}
-      </button>
-    </div>
-    )
-}
-
 
 function KeyButton({keyInfo, setKeyInfo}) {
   return (
@@ -190,11 +158,10 @@ function KeyButton({keyInfo, setKeyInfo}) {
   style={{marginRight: "7px"}}
   onClick={() => {
     setKeyInfo(keyInfo)
-    console.log(keyInfo)
-    }}>
+}}>
         {keyInfo}
       </button>
   )
 }
 
-export { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, CustomButton, SpecialCustomButton, AnswerHideButton, KeyButton, SaveButton , LineBreakButton};
+export { ProblemInfoButton, CorrectButton, WrongButton, UnresolvedButton, CustomButton, SpecialCustomButton, KeyButton, SaveButton };

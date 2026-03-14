@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
-
 import JSZip from 'jszip';
-
 
 import { HistoryButton, ExportButton, UploadButton, RawJSON } from './TopNav/Button';
 
@@ -22,9 +20,9 @@ export default function TopNav() {
           setTotalProblemNum,
           jsonFileName, setJsonFileName } = useContext(ProblemDataContext);
 
-  const { loadStatus, setLoadStatus } = useContext(EtcContext);
+  const { loadStatus, setLoadStatus, problemStatuses, setProblemStatuses } = useContext(EtcContext);
   const { setTargetSubject, setTargetProblemNum } = useContext(TargetKeyContext);
-  const { history, setHistory } = useContext(HistoryContext);
+  const { setHistory } = useContext(HistoryContext);
 
   const { isPopupOpen, setIsPopupOpen,
           isJsonPopupOpen, setIsJsonPopupOpen } = useContext(PopupContext);
@@ -34,7 +32,8 @@ export default function TopNav() {
     const input = e.target;
     const file = input.files?.[0];
 
-    setHistory([]); // history 초기화
+    setHistory([]);
+    setProblemStatuses({});
     
     if (!file) {
       // toast('파일을 선택해주세요.');
@@ -96,133 +95,59 @@ export default function TopNav() {
       .replace(/\.(json)$/i, '')
       .replace(/[\\/:*?"<>|]/g, '_');
 
-    // 직렬화된 jsonData만 저장
-    const jsonData = {
-      info: metaData,
-      questions: masterProblemData,
+    // 날짜 정보
+    const _date = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Seoul" });
+    const _dateDay = _date.split(' ')[0].replaceAll('-', '');
+    const _dateTime = _date.split(' ')[1].replaceAll(':', '');
+
+    // correct / wrong / unresolved 분류
+    const correctQuestions    = masterProblemData.filter(q => problemStatuses[q.question_id] === 'correct');
+    const wrongQuestions      = masterProblemData.filter(q => problemStatuses[q.question_id] === 'wrong');
+    const unresolvedQuestions = masterProblemData.filter(q => !problemStatuses[q.question_id]);
+
+    const serialize = (questions) => {
+      const data = { info: metaData, questions };
+      const seen = new WeakSet();
+      try {
+        return JSON.stringify(data, (_k, v) => {
+          if (typeof v === 'object' && v !== null) {
+            if (seen.has(v)) return '[Circular]';
+            seen.add(v);
+          }
+          return v;
+        }, 4);
+      } catch (e) {
+        console.error('JSON 직렬화 실패:', e);
+        return null;
+      }
     };
 
-    const seen = new WeakSet();
-    let jsonString;
-    try {
-      jsonString = JSON.stringify(jsonData, (k, v) => {
-        if (typeof v === 'object' && v !== null) {
-          if (seen.has(v)) return '[Circular]';
-          seen.add(v);
-        }
-        return v;
-      }, 4);
-    } catch (e) {
-      console.error('JSON 직렬화 실패:', e);
+    const correctStr    = serialize(correctQuestions);
+    const wrongStr      = serialize(wrongQuestions);
+    const unresolvedStr = serialize(unresolvedQuestions);
+
+    if (!correctStr || !wrongStr || !unresolvedStr) {
       alert('데이터 직렬화에 실패했습니다.');
       return;
     }
 
-    // 파일 저장 (Object URL 방식)
     const BOM = "\uFEFF";
-    const blob = new Blob([BOM, jsonString], { type: 'application/json;charset=utf-8' });
+    const zip = new JSZip();
+    zip.file(`${safeBase}_correct.json`,    BOM + correctStr);
+    zip.file(`${safeBase}_wrong.json`,      BOM + wrongStr);
+    zip.file(`${safeBase}_unresolved.json`, BOM + unresolvedStr);
 
-    // 날짜 정보
-    const _date = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Seoul" });
-    const _dateDay = _date.split(' ')[0].replaceAll('-', '')
-    const _dateTime = _date.split(' ')[1].replaceAll(':', '')
-
+    const blob = await zip.generateAsync({ type: 'blob' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${safeBase}+${_dateDay}+${_dateTime}.json`;
+    a.download = `${safeBase}+${_dateDay}+${_dateTime}.zip`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 0);
   };
   
-  // const exportJson = async () => {
-  //   if (!loadStatus) return;
-
-  //   const safeBase = String(jsonFileName || 'export')
-  //   .replace(/\.(json)$/i, '')
-  //   .replace(/[\\/:*?"<>|]/g, '_');
-  
-
-  
-  //   // 1) 안전 직렬화
-  //   const jsonData = {
-  //     // file_name: fileName,
-  //     info: metaData,
-  //     questions: masterProblemData,
-  //   };
-
-  //   const seen = new WeakSet();
-  //   let jsonString;
-  //   try {
-  //     jsonString = JSON.stringify(jsonData, (k, v) => {
-  //       if (typeof v === 'object' && v !== null) {
-  //         if (seen.has(v)) return '[Circular]';
-  //         seen.add(v);
-  //       }
-  //       return v;
-  //     }, 4);
-  //   } catch (e) {
-  //     console.error('JSON 직렬화 실패:', e);
-  //     alert('데이터 직렬화에 실패했습니다.');
-  //     return;
-  //   }
-
-  //   // 2) history.csv 생성
-  //   const historyCsv = history.map(item => 
-  //     [
-  //       escapeCsv(item.index),
-  //       escapeCsv(item.subject),
-  //       escapeCsv(item.problem_num),
-  //       escapeCsv(item.key),
-  //       escapeCsv(item.value_before),
-  //       escapeCsv(item.value_after)
-  //     ].join(',')
-  //   ).join('\n');
-
-
-  //   const csvHeader = "index,subject,problem_num,key,value_before,value_after\n";
-  //   const BOM = "\uFEFF";
-
-  //   const historyCsvBlob = new Blob([BOM, csvHeader, ...historyCsv], { type: 'text/csv;charset=utf-8-sig' });
-
-
-  //   // 3) zip 생성
-  //   const zip = new JSZip();
-  //   zip.file(`${safeBase}.json`, jsonString);
-  //   zip.file(`${safeBase}_history.csv`, historyCsvBlob);
-  //   const zipBlob = await zip.generateAsync({ type: 'blob' });
-
-
-
-  //   // const _date = new Date().toISOString()
-  //   const _date = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Seoul" });
-
-  //   const _dateDay = _date.split(' ')[0].replaceAll('-', '')
-  //   const _dateTime = _date.split(' ')[1].replaceAll(':', '')
-
-  //   const zipUrl = URL.createObjectURL(zipBlob);
-  //   const zipA = document.createElement('a');
-  //   zipA.href = zipUrl;
-  //   zipA.download = `${safeBase}+${_dateDay}+${_dateTime}.zip`;
-  //   document.body.appendChild(zipA);
-  //   zipA.click();
-  //   document.body.removeChild(zipA);
-  //   setTimeout(() => URL.revokeObjectURL(zipUrl), 0);
-
-  
-  //   // 5) 저장 (Object URL 방식)
-  //   // const url = URL.createObjectURL(zipBlob);
-  //   // const a = document.createElement('a');
-  //   // a.href = url;
-  //   // a.download = `${safeBase}.zip`;
-  //   // document.body.appendChild(a);
-  //   // a.click();
-  //   // document.body.removeChild(a);
-  //   // setTimeout(() => URL.revokeObjectURL(url), 0);
-  // };
-
   const handlePopupOpen = () => {
     if (!loadStatus) { return;}
     setIsPopupOpen(!isPopupOpen);
@@ -255,6 +180,7 @@ export default function TopNav() {
 
           <OrganizerDateDuration metaData={metaData} />
 
+          <ProblemStats problemStatuses={problemStatuses} total={masterProblemData.length} />
 
         </div>
       </div>
@@ -278,6 +204,34 @@ function MainTitle( { fileName } ) {
       <h1 className="text-2xl font-bold">{fileName || '-'}</h1>
     </div>
   )
+}
+
+
+function ProblemStats({ problemStatuses, total }) {
+  const correct = Object.values(problemStatuses).filter(s => s === 'correct').length;
+  const wrong   = Object.values(problemStatuses).filter(s => s === 'wrong').length;
+  const unresolved = total - correct - wrong;
+
+  return (
+    <div className="flex gap-4 text-sm">
+      <div className="flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check h-4 w-4 text-green-600">
+          <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+        <span>정답: {correct}</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x h-4 w-4 text-red-600">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+        <span>오답: {wrong}</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <span>미해결: {unresolved}</span>
+      </div>
+    </div>
+  );
 }
 
 
@@ -315,8 +269,3 @@ function OrganizerDateDuration({ metaData }) {
 
 
 
-function escapeCsv(value) {
-  if (value == null) return '';
-  const str = String(value);
-  return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-}

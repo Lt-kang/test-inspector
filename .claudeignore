@@ -1,0 +1,21 @@
+# 의존성
+node_modules/
+__pycache__/
+*.pyc
+.eggs/
+*.egg-info/
+
+# 빌드 결과물
+dist/
+build/
+output/
+
+# 대용량 데이터
+data/
+*.pth
+*.ckpt
+*.bin
+
+# 로그
+*.log
+wandb/

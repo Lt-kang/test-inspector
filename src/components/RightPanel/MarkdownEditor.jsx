@@ -1,5 +1,5 @@
 // MarkdownMathEditor.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import KorMarkdownViewer from "./MarkdownWithKor";
 
 // import { ParsingChoice } from '../etc/parsingObject';
@@ -13,9 +13,9 @@ export default function MarkdownEditor({
 }) {
   const [text, setText] = useState(content ?? "");
 
-  // useEffect(() => {
-  //   setText(content ?? "");
-  // }, [content]);
+  useEffect(() => {
+    setText(content ?? "");
+  }, [content]);
 
   const handleChange = (e) => {
     const v = e.target.value;

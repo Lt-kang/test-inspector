@@ -29,13 +29,10 @@ export const UnitProblemDataProvider = ({ children }) => {
     }
   });
 
-  const [lineBreakSwitch, setLineBreakSwitch] = useState(true);
-
     return (
-      <UnitProblemDataContext.Provider value={{ 
+      <UnitProblemDataContext.Provider value={{
                                             unitProblemIndex, setUnitProblemIndex,
-                                            unitProblemData, setUnitProblemData, 
-                                            lineBreakSwitch, setLineBreakSwitch,
+                                            unitProblemData, setUnitProblemData,
                                             }}>
         {children}
       </UnitProblemDataContext.Provider>

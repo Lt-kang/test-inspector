@@ -17,43 +17,27 @@ import { ParsingChoice } from '../etc/parsingObject';
 
 
 
-const insepct_list = [
-  "question_id",
-  "section",
-  "problem_number",
-  "passage",
-  "question",
-  "options_text",
-  "score",
-  "answer",
-  "explanation",
-  "attachments",
-  "meta"
-]
-
-
 
 export default function MasterDiv() {
-    const { masterProblemData, setMasterProblemData } = useContext(ProblemDataContext);
+    const { masterProblemData } = useContext(ProblemDataContext);
     const { problemInfoShow, 
             loadStatus } = useContext(EtcContext);
     const { targetSubject, targetProblemNum } = useContext(TargetKeyContext);
 
     const { unitProblemData, setUnitProblemData,
-            unitProblemIndex, setUnitProblemIndex } = useContext(UnitProblemDataContext);
-
-    const [targetIndex, setTargetIndex] = useState(-1);
-
+            setUnitProblemIndex } = useContext(UnitProblemDataContext);
 
     useEffect(() => {
-      if (!loadStatus) { return; }
+      if (!loadStatus || targetSubject === '') return;
 
-      if (targetSubject !== '') {
-          setUnitProblemData(masterProblemData.find(item => item.section === targetSubject && parseInt(item.problem_number) === parseInt(targetProblemNum)));
-          setTargetIndex(masterProblemData.findIndex(item => item.section === targetSubject && parseInt(item.problem_number) === parseInt(targetProblemNum)));
-          setUnitProblemIndex(masterProblemData.findIndex(item => item.section === targetSubject && parseInt(item.problem_number) === parseInt(targetProblemNum)));
-      }
-    }, [targetSubject, targetProblemNum, masterProblemData]);
+      const idx = masterProblemData.findIndex(
+        item => item.section === targetSubject &&
+                String(item.problem_number) === String(targetProblemNum)
+      );
+      setUnitProblemIndex(idx);
+      if (idx !== -1) setUnitProblemData(masterProblemData[idx]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [targetSubject, targetProblemNum]);
 
 
 
@@ -62,49 +46,38 @@ export default function MasterDiv() {
           <ProblemMetaData problemInfoShow={problemInfoShow} problem_data={unitProblemData} />
 
 
-          <ProblemTitle  title="question_id" target_key="question_id" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          {/* <ProblemTitle  title="question_id" target_key="question_id" />
           <BoarderLine />
 
-          <ProblemTitle  title="section" target_key="section" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <ProblemTitle  title="section" target_key="section" />
           <BoarderLine />
 
-          <ProblemTitle  title="problem_number" target_key="problem_number" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <ProblemTitle  title="problem_number" target_key="problem_number" />
+          <BoarderLine /> */}
+
+          <ProblemTitle  title="passage" target_key="passage" />
           <BoarderLine />
 
-          <ProblemTitle  title="passage" target_key="passage" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <ProblemTitle  title="question" target_key="question" />
           <BoarderLine />
 
-          <ProblemTitle  title="question" target_key="question" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <ProblemTitle  title="options_text" target_key="options_text" />
           <BoarderLine />
 
-          <ProblemTitle  title="options_text" target_key="options_text" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <ProblemTitle  title="score" target_key="score" />
           <BoarderLine />
 
-          <ProblemTitle  title="score" target_key="score" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <ProblemTitle  title="answer" target_key="answer" />
           <BoarderLine />
 
-          <ProblemTitle  title="answer" target_key="answer" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <ProblemTitle  title="explanation" target_key="explanation" />
           <BoarderLine />
 
-          <ProblemTitle  title="explanation" target_key="explanation" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
+          <ProblemTitle  title="attachments" target_key="attachments" />
           <BoarderLine />
 
-          <ProblemTitle  title="attachments" target_key="attachments" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
-          <BoarderLine />
-
-          <ProblemTitle  title="meta" target_key="meta" unitProblemData={unitProblemData} setUnitProblemData={setUnitProblemData} 
-          masterProblemData={masterProblemData} setMasterProblemData={setMasterProblemData} targetIndex={targetIndex} />
-          <BoarderLine />
+          {/* <ProblemTitle  title="meta" target_key="meta" />
+          <BoarderLine /> */}
 
       </div>
     )
@@ -173,12 +146,10 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
     const { unitProblemData, setUnitProblemData } = useContext(UnitProblemDataContext);
 
     const EditorChangeAction = (v) => {
-      console.log("v: ", v)
       setUnitProblemData(prev => ({
         ...(prev ?? {}),
         [target_key]: v,
       }));
-      console.log("unitProblemData: ", unitProblemData)
     }
 
 
@@ -188,8 +159,6 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
 
     
     
-    // const contents = unitProblemData[target_key] ?? "None";
-
     if (!ProblemEditorShow) {
         return(
             <KorMarkdownViewer content={contents} />
@@ -197,7 +166,7 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
       }
       else {
         // Editor button을 눌렀을 때
-        if (target_key in ["attachments", "meta"]) {
+        if (["attachments", "meta"].includes(target_key)) {
             return (
                   <ChoiceEditor 
                       content={unitProblemData[target_key]} 
@@ -222,79 +191,3 @@ function DivProblemEdit({ target_key, ProblemEditorShow }) {
 
 
 
-function AnswerTitle({ title, target_key }) {
-const [AnswerEditorShow, setAnswerEditorShow] = useState(false);
-const { loadStatus } = useContext(EtcContext);
-const { targetSubject, targetProblemNum } = useContext(TargetKeyContext);
-
-useEffect(() => {
-  setAnswerEditorShow(false);
-}, [targetSubject, targetProblemNum]);
-
-
-return (
-        <div>
-          <h3 class="text-lg font-semibold mb-3">{title} 
-              <CustomButton Text={AnswerEditorShow ? "View" : "Editor"} 
-                            onClickFunction={() => {
-                              if (!loadStatus) {
-                                return ;
-                              }
-                              setAnswerEditorShow(!AnswerEditorShow)}} />
-          </h3>
-
-          <div style={{marginTop: "7px"}}></div>
-          <br></br>
-
-            <DivAnswerEdit target_key={target_key} 
-                          AnswerEditorShow={AnswerEditorShow} />
-        </div>
-        )
-  }
-
-
-
-function DivAnswerEdit({target_key, AnswerEditorShow}) {
-    const { unitProblemData, setUnitProblemData } = useContext(UnitProblemDataContext);
-
-    const EditorChangeAction = (v) => {
-      setUnitProblemData(prev => ({
-        ...prev,
-        [target_key]: v,
-      }));
-    }
-
-
-    if (!AnswerEditorShow) {
-        let contents = ""
-
-        if (typeof unitProblemData.answer[target_key] == 'object') {
-          contents = ParsingChoice(unitProblemData.answer[target_key])
-        }
-        else {
-          contents = unitProblemData.answer[target_key];
-        }
-
-
-        return (
-        <KorMarkdownViewer content={contents} />
-      )
-        
-    }
-    else {
-      // Editor button을 눌렀을 때
-      if (target_key === "explanation_wrongchoice") {
-        return (
-              <ChoiceEditor 
-                  content={unitProblemData.answer[target_key]} 
-                  onChange={EditorChangeAction} 
-                  />
-        )
-      } else {
-          return (
-                    <MarkdownEditor content={unitProblemData.answer[target_key]} 
-                                    onChange={EditorChangeAction} />
-          )
-      }
-    }
-  }

@@ -4,15 +4,10 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-
-
-import { useContext } from "react";
-import { UnitProblemDataContext } from "./UnitProblemDataContext";
+import "katex/dist/katex.min.css";
 
 
 export default function KorMarkdownViewer({content}) {
-  // const { unitProblemData } = useContext(UnitProblemDataContext);
-  const { lineBreakSwitch } = useContext(UnitProblemDataContext);
 
   return (
     <div className="prose max-w-none">
@@ -44,7 +39,7 @@ export default function KorMarkdownViewer({content}) {
           {/* {unitProblemData.subject.includes("수학") ? content.replace(/\n/g, '  \n') : content.replace(/\n/g, '  \n  ▽  \n')} */}
           {/* {content.replace(/\n\n/g, '  \n□  \n').replace(/\n/g, '  \n')} */}
 
-          {String(content ?? 'null')}
+          {String(content ?? 'null').replace(/\n/g, '  \n')}
           {/* {lineBreakSwitch ? (content ?? 'null').replace(/\n/g, '  \n') : (content ?? 'null').replace(/\n/g, '  \n  ▽  \n')} */}
           
           </ReactMarkdown>

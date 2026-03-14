@@ -1,3 +1,10 @@
 /node_modules
-
 .env
+.claude
+
+CLAUDE.md
+schema.json
+sample_input.json
+
+/vibe_logs
+/build

@@ -4,15 +4,13 @@ export const EtcContext = createContext();
 
 export const EtcProvider = ({ children }) => {
     const [loadStatus, setLoadStatus] = useState(false);
-    
-    const [answerShow, setAnswerShow] = useState(true);
     const [problemInfoShow, setProblemInfoShow] = useState(false);
-
+    const [problemStatuses, setProblemStatuses] = useState({});
 
     return (
       <EtcContext.Provider value={{ loadStatus, setLoadStatus,
-                                    answerShow, setAnswerShow,
-                                    problemInfoShow, setProblemInfoShow
+                                    problemInfoShow, setProblemInfoShow,
+                                    problemStatuses, setProblemStatuses
                                     }}>
         {children}
       </EtcContext.Provider>

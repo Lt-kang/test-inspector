@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const ProblemDataContext = createContext();
 
 export const ProblemDataProvider = ({ children }) => {
-  const [fileName, setFileName] = useState(['']);
+  const [fileName, setFileName] = useState('');
   const [metaData, setMetaData] = useState({
     year: null,
     type: null,

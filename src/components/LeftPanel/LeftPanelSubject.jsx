@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useMemo } from "react";
 import { ProblemDataContext } from "../../context/ProblemDataContext";
 import { TargetKeyContext } from "../../context/TargetKeyContext";
 import { EtcContext } from "../../context/EtcContext";
@@ -42,7 +42,7 @@ function UnitProblemList({ subject, problemNum }) {
 
     const { targetSubject, targetProblemNum, setTargetSubject, setTargetProblemNum } = useContext(TargetKeyContext);
     const { loadStatus } = useContext(EtcContext);
-    const isSelected = targetSubject === subject && parseInt(targetProblemNum) === parseInt(problemNum);
+    const isSelected = targetSubject === subject && String(targetProblemNum) === String(problemNum);
 
     const handleProblemClick = () => {
         if (!loadStatus) {
@@ -72,8 +72,14 @@ function UnitProblemList({ subject, problemNum }) {
 export default function LeftPanelSubject() {
     const { masterProblemData } = useContext(ProblemDataContext);
 
-    const subjectSet = new Set(masterProblemData.map(item => item.section));
-    const subjectCount = new Map(Array.from(subjectSet).map(subject => [subject, masterProblemData.filter(item => item.section === subject).length]));
+    const { subjectSet, subjectCount } = useMemo(() => {
+        const set = new Set(masterProblemData.map(item => item.section));
+        const count = new Map(Array.from(set).map(subject => [
+            subject,
+            masterProblemData.filter(item => item.section === subject).length
+        ]));
+        return { subjectSet: set, subjectCount: count };
+    }, [masterProblemData]);
     
 
   return (
